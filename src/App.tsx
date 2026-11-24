@@ -470,15 +470,15 @@ export default function App() {
 
       <main id="mapel">
         <div className="top-section">
-          <section className="intro">
+          <div className="section-title-wrap">
             <h1>
-              Pilih mata pelajaran<span>.</span>
+              Mata Pelajaran<span>.</span>
             </h1>
-            <p>Klik mapel untuk langsung membuka folder berkas di Google Drive.</p>
-          </section>
+            <span className="subject-counter">8 mapel siap akses</span>
+          </div>
 
           <label className="search-box">
-            <Icon name="search" size={22} />
+            <Icon name="search" size={20} />
             <input
               ref={searchRef}
               type="search"

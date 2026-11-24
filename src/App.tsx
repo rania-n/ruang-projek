@@ -330,7 +330,7 @@ export default function App() {
   const [selected, setSelected] = useState<Subject | null>(null);
   const [guide, setGuide] = useState(false);
   const [dark, setDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
-  const [showShortcut, setShowShortcut] = useState(true);
+  const [showLauncher, setShowLauncher] = useState(true);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -344,6 +344,16 @@ export default function App() {
     const timer = setTimeout(() => setLoading(false), 900);
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && showLauncher && !isModalActive) {
+        setShowLauncher(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [showLauncher, isModalActive]);
 
   useEffect(() => {
     document.documentElement.dataset.theme = dark ? "dark" : "light";
@@ -420,199 +430,291 @@ export default function App() {
         </div>
       )}
 
-      <header className="header">
-        <div className="header-inner">
-          <a
-            className="brand"
-            href="#mapel"
-            onClick={(e) => {
-              e.preventDefault();
-              goHome();
-            }}
-            aria-label="RuangProjek, kembali ke daftar mapel"
-          >
-            <span className="brand-icon">
-              <Icon name="folder" />
-            </span>
-            <span>
-              Ruang<span className="brand-light">Projek</span>
-              <span className="brand-dot">.</span>
-            </span>
-          </a>
-
-          <nav aria-label="Menu utama">
-            <button className="nav-button" onClick={() => setGuide(true)} title="Bantuan">
-              <Icon name="help" size={20} />
-              <span className="nav-label">Bantuan</span>
-            </button>
-            {MAIN_DRIVE_URL ? (
+      {showLauncher ? (
+        <div className="launcher-screen">
+          <header className="launcher-header">
+            <div className="launcher-header-inner">
               <a
-                className="nav-button nav-drive"
-                href={MAIN_DRIVE_URL}
-                target="_blank"
-                rel="noreferrer"
-                title="Buka semua berkas di Google Drive"
-              >
-                <Icon name="folder" size={19} />
-                <span className="nav-label">Google Drive</span>
-                <Icon name="external" size={15} />
-              </a>
-            ) : null}
-            <button
-              className="nav-button theme-button"
-              onClick={() => setDark(!dark)}
-              aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-              aria-pressed={dark}
-              title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
-            >
-              <Icon name={dark ? "sun" : "moon"} size={19} />
-              <span className="theme-label">{dark ? "Mode terang" : "Mode gelap"}</span>
-            </button>
-          </nav>
-        </div>
-      </header>
-
-      <main id="mapel">
-        {showShortcut && (
-          <div className="shortcut-banner">
-            <div className="shortcut-content">
-              <span className="shortcut-badge">
-                <Icon name="spark" size={14} />
-                Pintasan
-              </span>
-              <span className="shortcut-text">
-                Akses cepat ke folder Google Drive utama atau buka panduan berkas.
-              </span>
-            </div>
-            <div className="shortcut-actions">
-              {MAIN_DRIVE_URL && (
-                <a
-                  href={MAIN_DRIVE_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="shortcut-btn"
-                  title="Buka Google Drive Utama"
-                >
-                  <Icon name="folder" size={15} />
-                  <span>Drive Utama</span>
-                  <Icon name="external" size={13} />
-                </a>
-              )}
-              <button
-                type="button"
-                className="shortcut-btn secondary"
-                onClick={() => setGuide(true)}
-                title="Buka Panduan Projek"
-              >
-                <Icon name="help" size={15} />
-                <span>Panduan</span>
-              </button>
-              <button
-                type="button"
-                className="shortcut-close-btn"
-                onClick={() => setShowShortcut(false)}
-                aria-label="Tutup pintasan"
-                title="Tutup pintasan"
-              >
-                <Icon name="close" size={16} />
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="top-section">
-          <div className="section-title-wrap">
-            <h1>
-              Mata Pelajaran<span>.</span>
-            </h1>
-          </div>
-
-          <label className="search-box">
-            <Icon name="search" size={20} />
-            <input
-              ref={searchRef}
-              type="search"
-              placeholder="Cari mapel atau berkas…"
-              aria-label="Cari mata pelajaran atau berkas"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            {query && (
-              <button
-                className="icon-button"
-                aria-label="Hapus pencarian"
-                onClick={() => {
-                  setQuery("");
-                  searchRef.current?.focus();
+                className="brand"
+                href="#mapel"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowLauncher(false);
                 }}
+                aria-label="RuangProjek"
               >
-                <Icon name="close" size={18} />
-              </button>
-            )}
-          </label>
-        </div>
+                <span className="brand-icon">
+                  <Icon name="folder" />
+                </span>
+                <span>
+                  Ruang<span className="brand-light">Projek</span>
+                  <span className="brand-dot">.</span>
+                </span>
+              </a>
 
-        <section className="subject-grid" aria-label="Daftar mata pelajaran">
-          {visible.map((subject, i) => {
-            const hasDriveLink = Boolean(DRIVE_LINKS[subject.id] || subject.url || MAIN_DRIVE_URL);
-            return (
-              <button
-                key={subject.id}
-                className={`subject-card ${subject.color}`}
-                onClick={() => handleCardClick(subject)}
-                style={{ animationDelay: `${i * 35}ms` }}
-                title={`Klik untuk membuka Google Drive ${subject.name}`}
-              >
-                <div className="card-top-row">
-                  <span className="subject-icon">
-                    <Icon name={subject.icon} size={25} />
+              <div className="launcher-header-actions">
+                {MAIN_DRIVE_URL ? (
+                  <a
+                    className="nav-button nav-drive"
+                    href={MAIN_DRIVE_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Buka Folder Google Drive Utama"
+                  >
+                    <Icon name="folder" size={18} />
+                    <span className="nav-label">Drive Utama</span>
+                    <Icon name="external" size={14} />
+                  </a>
+                ) : null}
+                <button
+                  className="nav-button"
+                  onClick={() => setGuide(true)}
+                  title="Bantuan & Panduan"
+                >
+                  <Icon name="help" size={18} />
+                  <span className="nav-label">Bantuan</span>
+                </button>
+                <button
+                  className="nav-button theme-button"
+                  onClick={() => setDark(!dark)}
+                  aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+                  title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+                >
+                  <Icon name={dark ? "sun" : "moon"} size={18} />
+                  <span className="theme-label">{dark ? "Mode terang" : "Mode gelap"}</span>
+                </button>
+                <button
+                  className="launcher-close-btn"
+                  onClick={() => setShowLauncher(false)}
+                  aria-label="Tutup dan ke halaman biasa"
+                  title="Tutup (ke halaman biasa) - Esc"
+                >
+                  <span className="launcher-close-text">Halaman Biasa</span>
+                  <span className="launcher-close-icon">
+                    <Icon name="close" size={18} />
                   </span>
-                  <span className="file-badge">{subject.files.length} berkas</span>
-                </div>
+                </button>
+              </div>
+            </div>
+          </header>
 
-                <div className="card-copy">
-                  <h2>{subject.name}</h2>
-                  <p>{subject.description}</p>
-                </div>
+          <main className="launcher-container">
+            <div className="launcher-hero">
+              <div className="launcher-sparkle-pill">
+                <Icon name="spark" size={14} />
+                <span>Pintasan Cepat Google Drive</span>
+              </div>
+              <h1>
+                Pilih Mata Pelajaran<span>.</span>
+              </h1>
+              <p>
+                Klik tombol mapel di bawah untuk langsung membuka folder Google Drive resmi, atau
+                klik tombol silang (✕) di pojok kanan atas untuk beralih ke halaman biasa.
+              </p>
+            </div>
 
-                {/* Butir-butir berkas langsung terlihat di kartu */}
-                <div className="card-files-list">
-                  {subject.files.map((file) => (
-                    <div key={file.name} className="card-file-item">
-                      <span className="file-dot" />
-                      <span className="file-name">{file.name}</span>
-                    </div>
-                  ))}
-                </div>
+            <div className="launcher-grid">
+              {subjects.map((subject, idx) => (
+                <button
+                  key={subject.id}
+                  type="button"
+                  className={`launcher-card ${subject.color}`}
+                  onClick={() => handleCardClick(subject)}
+                  style={{ animationDelay: `${idx * 30}ms` }}
+                  title={`Buka Google Drive ${subject.name}`}
+                >
+                  <div className="launcher-card-icon">
+                    <Icon name={subject.icon} size={26} />
+                  </div>
+                  <div className="launcher-card-text">
+                    <h3>{subject.name}</h3>
+                    <p>{subject.description}</p>
+                  </div>
+                  <div className="launcher-card-action">
+                    <span className="action-tag">Buka Drive</span>
+                    <span className="action-arrow">
+                      <Icon name="external" size={14} />
+                    </span>
+                  </div>
+                </button>
+              ))}
+            </div>
 
-                <span className="card-action">
-                  <span>{hasDriveLink ? "Buka Google Drive" : "Tautkan Google Drive"}</span>
-                  <Icon name="external" size={17} />
+            <div className="launcher-footer">
+              <button
+                type="button"
+                className="launcher-footer-btn"
+                onClick={() => setShowLauncher(false)}
+                title="Buka halaman lengkap dengan pencarian dan rincian berkas"
+              >
+                <span>Ke Halaman Biasa (Pencarian & Rincian Berkas Lengkap)</span>
+                <span className="footer-arrow" aria-hidden="true">
+                  &rarr;
                 </span>
               </button>
-            );
-          })}
-        </section>
+            </div>
+          </main>
+        </div>
+      ) : (
+        <>
+          <header className="header">
+            <div className="header-inner">
+              <a
+                className="brand"
+                href="#mapel"
+                onClick={(e) => {
+                  e.preventDefault();
+                  goHome();
+                }}
+                aria-label="RuangProjek, kembali ke daftar mapel"
+              >
+                <span className="brand-icon">
+                  <Icon name="folder" />
+                </span>
+                <span>
+                  Ruang<span className="brand-light">Projek</span>
+                  <span className="brand-dot">.</span>
+                </span>
+              </a>
 
-        {visible.length === 0 && (
-          <div className="empty-state">
-            <Icon name="search" size={32} />
-            <h2>Mapel tidak ditemukan</h2>
-            <p>Coba nama mapel atau kata kunci lain.</p>
-            <button className="primary-button" onClick={() => setQuery("")}>
-              Lihat semua mapel <Icon name="arrow" size={20} />
-            </button>
-          </div>
-        )}
+              <nav aria-label="Menu utama">
+                <button
+                  className="nav-button"
+                  onClick={() => setShowLauncher(true)}
+                  title="Buka Akses Cepat Mapel Layar Penuh"
+                >
+                  <Icon name="grid" size={19} />
+                  <span className="nav-label">Akses Cepat</span>
+                </button>
+                <button className="nav-button" onClick={() => setGuide(true)} title="Bantuan">
+                  <Icon name="help" size={20} />
+                  <span className="nav-label">Bantuan</span>
+                </button>
+                {MAIN_DRIVE_URL ? (
+                  <a
+                    className="nav-button nav-drive"
+                    href={MAIN_DRIVE_URL}
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Buka semua berkas di Google Drive"
+                  >
+                    <Icon name="folder" size={19} />
+                    <span className="nav-label">Google Drive</span>
+                    <Icon name="external" size={15} />
+                  </a>
+                ) : null}
+                <button
+                  className="nav-button theme-button"
+                  onClick={() => setDark(!dark)}
+                  aria-label={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+                  aria-pressed={dark}
+                  title={dark ? "Aktifkan mode terang" : "Aktifkan mode gelap"}
+                >
+                  <Icon name={dark ? "sun" : "moon"} size={19} />
+                  <span className="theme-label">{dark ? "Mode terang" : "Mode gelap"}</span>
+                </button>
+              </nav>
+            </div>
+          </header>
 
-        <footer>
-          <span>Projek UMKM · 8 mata pelajaran</span>
-          <a href="https://timdev3k.vercel.app" target="_blank" rel="noreferrer">
-            Dibuat oleh <strong>timdev3k</strong>
-            <Icon name="external" size={16} />
-          </a>
-        </footer>
-      </main>
+          <main id="mapel">
+            <div className="top-section">
+              <div className="section-title-wrap">
+                <h1>
+                  Mata Pelajaran<span>.</span>
+                </h1>
+              </div>
+
+              <label className="search-box">
+                <Icon name="search" size={20} />
+                <input
+                  ref={searchRef}
+                  type="search"
+                  placeholder="Cari mapel atau berkas…"
+                  aria-label="Cari mata pelajaran atau berkas"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
+                {query && (
+                  <button
+                    className="icon-button"
+                    aria-label="Hapus pencarian"
+                    onClick={() => {
+                      setQuery("");
+                      searchRef.current?.focus();
+                    }}
+                  >
+                    <Icon name="close" size={18} />
+                  </button>
+                )}
+              </label>
+            </div>
+
+            <section className="subject-grid" aria-label="Daftar mata pelajaran">
+              {visible.map((subject, i) => {
+                const hasDriveLink = Boolean(
+                  DRIVE_LINKS[subject.id] || subject.url || MAIN_DRIVE_URL,
+                );
+                return (
+                  <button
+                    key={subject.id}
+                    className={`subject-card ${subject.color}`}
+                    onClick={() => handleCardClick(subject)}
+                    style={{ animationDelay: `${i * 35}ms` }}
+                    title={`Klik untuk membuka Google Drive ${subject.name}`}
+                  >
+                    <div className="card-top-row">
+                      <span className="subject-icon">
+                        <Icon name={subject.icon} size={25} />
+                      </span>
+                      <span className="file-badge">{subject.files.length} berkas</span>
+                    </div>
+
+                    <div className="card-copy">
+                      <h2>{subject.name}</h2>
+                      <p>{subject.description}</p>
+                    </div>
+
+                    {/* Butir-butir berkas langsung terlihat di kartu */}
+                    <div className="card-files-list">
+                      {subject.files.map((file) => (
+                        <div key={file.name} className="card-file-item">
+                          <span className="file-dot" />
+                          <span className="file-name">{file.name}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <span className="card-action">
+                      <span>{hasDriveLink ? "Buka Google Drive" : "Tautkan Google Drive"}</span>
+                      <Icon name="external" size={17} />
+                    </span>
+                  </button>
+                );
+              })}
+            </section>
+
+            {visible.length === 0 && (
+              <div className="empty-state">
+                <Icon name="search" size={32} />
+                <h2>Mapel tidak ditemukan</h2>
+                <p>Coba nama mapel atau kata kunci lain.</p>
+                <button className="primary-button" onClick={() => setQuery("")}>
+                  Lihat semua mapel <Icon name="arrow" size={20} />
+                </button>
+              </div>
+            )}
+
+            <footer>
+              <span>Projek UMKM · 8 mata pelajaran</span>
+              <a href="https://timdev3k.vercel.app" target="_blank" rel="noreferrer">
+                Dibuat oleh <strong>timdev3k</strong>
+                <Icon name="external" size={16} />
+              </a>
+            </footer>
+          </main>
+        </>
+      )}
 
       <dialog
         ref={dialogRef}

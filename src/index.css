@@ -38,7 +38,6 @@
 }
 
 @layer base {
-
   *,
   *::before,
   *::after {
@@ -101,7 +100,6 @@
 
 /* Custom Cursor: Ringan, 0 latency, GPU accelerated */
 @media (pointer: fine) {
-
   html.custom-cursor:not(.dialog-open),
   html.custom-cursor:not(.dialog-open) body:not(.dialog-open) *:not(dialog):not(dialog *) {
     cursor: none !important;
@@ -343,7 +341,7 @@ main {
   margin: 0;
 }
 
-.intro h1>span {
+.intro h1 > span {
   color: var(--purple);
 }
 
@@ -371,7 +369,7 @@ main {
     box-shadow 0.2s;
 }
 
-.search-box>svg {
+.search-box > svg {
   flex-shrink: 0;
 }
 
@@ -677,7 +675,7 @@ footer a:hover {
   border-radius: 14px;
 }
 
-.empty-state>svg {
+.empty-state > svg {
   margin: auto auto 14px;
   color: var(--purple);
 }
@@ -985,7 +983,7 @@ footer a:hover {
   letter-spacing: -0.8px;
 }
 
-.loading-screen h2>span {
+.loading-screen h2 > span {
   font-weight: 500;
   color: var(--purple);
 }
@@ -1069,7 +1067,6 @@ footer a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-
   *,
   *::before,
   *::after {

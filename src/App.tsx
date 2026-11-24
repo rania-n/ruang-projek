@@ -219,7 +219,8 @@ export type Subject = {
 // ============================================================================
 
 // 1. Tautan Folder Google Drive Utama (Jika punya 1 folder induk untuk semua mapel)
-export const MAIN_DRIVE_URL = "";
+export const MAIN_DRIVE_URL =
+  "https://drive.google.com/drive/folders/1Bahw909HaKD6v1bbQZ5PmHt_n-dPpjc7?usp=sharing";
 
 // 2. Tautan Folder Google Drive per Mata Pelajaran dari akun timdev3k@gmail.com
 export const DRIVE_LINKS: Record<string, string> = {

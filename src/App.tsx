@@ -242,8 +242,8 @@ const subjects: Subject[] = [
     icon: "book",
     color: "blue",
     files: [
-      { name: "Laporan hasil kegiatan", type: "Dokumen" },
-      { name: "Petunjuk penggunaan aplikasi", type: "Dokumen" },
+      { name: "Laporan hasil kegiatan UMKM", type: "Dokumen" },
+      { name: "Petunjuk penggunaan aplikasi (Manual Book)", type: "Dokumen" },
     ],
   },
   {
@@ -253,8 +253,8 @@ const subjects: Subject[] = [
     icon: "spark",
     color: "lilac",
     files: [
-      { name: "Aplikasi UMKM", type: "Aplikasi" },
-      { name: "Materi dan video promosi", type: "Video" },
+      { name: "Dokumentasi aplikasi UMKM dan model bisnis", type: "Dokumen" },
+      { name: "Materi dan skenario video promosi", type: "Dokumen" },
       { name: "Bukti pemasaran dan ulasan konsumen", type: "Dokumen" },
     ],
   },
@@ -265,17 +265,17 @@ const subjects: Subject[] = [
     icon: "code",
     color: "mint",
     files: [
-      { name: "Aplikasi front-end dan back-end", type: "Aplikasi" },
-      { name: "Rancangan ERD, DFD, dan Usecase", type: "Dokumen" },
+      { name: "Dokumentasi aplikasi front-end dan back-end", type: "Dokumen" },
+      { name: "Rancangan sistem ERD, DFD, dan Usecase", type: "Dokumen" },
     ],
   },
   {
     id: "jawa",
     name: "Bahasa Jawa",
-    description: "Video moderator bahasa Jawa",
+    description: "Naskah pranata adicara bahasa Jawa",
     icon: "chat",
     color: "sand",
-    files: [{ name: "Video moderator pranata adicara", type: "Video" }],
+    files: [{ name: "Naskah pranata adicara (pambyawara)", type: "Dokumen" }],
   },
   {
     id: "agama",
@@ -284,8 +284,8 @@ const subjects: Subject[] = [
     icon: "heart",
     color: "peach",
     files: [
-      { name: "Penilaian sikap dan akhlak mulia", type: "Dokumentasi" },
-      { name: "Bukti sopan santun dan kejujuran", type: "Dokumentasi" },
+      { name: "Penilaian sikap dan akhlak mulia", type: "Dokumen" },
+      { name: "Bukti sopan santun dan kejujuran", type: "Dokumen" },
     ],
   },
   {
@@ -295,9 +295,9 @@ const subjects: Subject[] = [
     icon: "shield",
     color: "rose",
     files: [
-      { name: "Kedisiplinan dan tanggung jawab", type: "Dokumentasi" },
-      { name: "Gotong royong dan kerja sama tim", type: "Dokumentasi" },
-      { name: "Etika saat presentasi", type: "Dokumentasi" },
+      { name: "Dokumentasi kedisiplinan dan tanggung jawab", type: "Dokumen" },
+      { name: "Gotong royong dan kerja sama tim", type: "Dokumen" },
+      { name: "Etika dan tata krama saat presentasi", type: "Dokumen" },
     ],
   },
   {
@@ -307,8 +307,8 @@ const subjects: Subject[] = [
     icon: "grid",
     color: "periwinkle",
     files: [
-      { name: "Fitur Fuzzy Logic", type: "Aplikasi" },
-      { name: "Dokumentasi penerapan Fuzzy Logic", type: "Dokumen" },
+      { name: "Dokumentasi fitur Fuzzy Logic aplikasi", type: "Dokumen" },
+      { name: "Implementasi kode algoritma Fuzzy", type: "Dokumen" },
     ],
   },
   {
@@ -318,8 +318,8 @@ const subjects: Subject[] = [
     icon: "clock",
     color: "sage",
     files: [
-      { name: "Dokumentasi komunikasi dengan UMKM", type: "Dokumentasi" },
-      { name: "Bukti negosiasi dengan UMKM", type: "Dokumentasi" },
+      { name: "Dokumentasi komunikasi dan wawancara UMKM", type: "Dokumen" },
+      { name: "Bukti negosiasi dan kerjasama UMKM", type: "Dokumen" },
     ],
   },
 ];

@@ -253,6 +253,14 @@ export type PpknDocItem = {
 
 export const DEFAULT_PPKN_DOCS: PpknDocItem[] = [
   {
+    id: "proposal",
+    name: "Pengajuan Proposal Awal",
+    date: "2026-10-10",
+    files: ["pengajuan proposal.jpg"],
+    notes:
+      "Pembentukan struktur kelompok projek dan perumusan berkas pengajuan proposal ke sekolah",
+  },
+  {
     id: "manna",
     name: "Manna Cafe Tulungagung",
     date: "2026-10-12",
@@ -268,13 +276,6 @@ export const DEFAULT_PPKN_DOCS: PpknDocItem[] = [
       "Pertemuan klien via WhatsApp, pembuatan landing page prototype, penyusunan MOU, dan serah terima website",
   },
   {
-    id: "bonbin",
-    name: "BonBin Cafe Tulungagung",
-    date: "2026-10-16",
-    files: ["bonbin.HEIC", "16 okt.jpg"],
-    notes: "Kerja kelompok evaluasi pertemuan klien dan koordinasi tugas pembuatan sistem",
-  },
-  {
     id: "eastville",
     name: "Eastville Barbershop",
     date: "2026-10-16",
@@ -283,11 +284,25 @@ export const DEFAULT_PPKN_DOCS: PpknDocItem[] = [
       "Pertemuan klien Eastville, penyerahan MOU, perancangan prototype, dan revisi fitur absensi kapster/lembur",
   },
   {
+    id: "bonbin",
+    name: "BonBin Cafe Tulungagung",
+    date: "2026-10-16",
+    files: ["bonbin.HEIC", "16 okt.jpg"],
+    notes: "Kerja kelompok evaluasi pertemuan klien dan koordinasi tugas pembuatan sistem",
+  },
+  {
     id: "ruang-temu",
     name: "Ruang Temu Kepatihan",
     date: "2026-10-21",
     files: ["ruang temu.jpg", "ruang temu.HEIC"],
     notes: "Kerja kelompok pembahasan revisi proposal dan desain UI website",
+  },
+  {
+    id: "sekolah",
+    name: "Kerja Kelompok di Sekolah",
+    date: "2026-10-22",
+    files: ["E416ADDE-832A-4C4B-A0C3-4272F80D4D3E.jpg"],
+    notes: "Koordinasi tatap muka penetapan pembagian tugas dan daftar kebutuhan projek",
   },
   {
     id: "dmr",
@@ -323,21 +338,6 @@ export const DEFAULT_PPKN_DOCS: PpknDocItem[] = [
     date: "2026-11-15",
     files: ["fotobooth.HEIC", "photobooth 2.jpg"],
     notes: "Dokumentasi stan promosi dan display banner photobooth karya kelompok",
-  },
-  {
-    id: "proposal",
-    name: "Pengajuan Proposal Awal",
-    date: "2026-10-10",
-    files: ["pengajuan proposal.jpg"],
-    notes:
-      "Pembentukan struktur kelompok projek dan perumusan berkas pengajuan proposal ke sekolah",
-  },
-  {
-    id: "sekolah",
-    name: "Kerja Kelompok di Sekolah",
-    date: "2026-10-22",
-    files: ["E416ADDE-832A-4C4B-A0C3-4272F80D4D3E.jpg"],
-    notes: "Koordinasi tatap muka penetapan pembagian tugas dan daftar kebutuhan projek",
   },
 ];
 
@@ -448,7 +448,7 @@ export default function App() {
     } catch {}
     return DEFAULT_PPKN_DOCS;
   });
-  const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "name">("newest");
+  const [sortOrder, setSortOrder] = useState<"oldest" | "newest" | "name">("oldest");
   const [copiedNotification, setCopiedNotification] = useState(false);
 
   // Form state input dokumentasi baru
@@ -1097,17 +1097,17 @@ export default function App() {
                   <span className="sort-title">Urutkan:</span>
                   <button
                     type="button"
-                    className={`sort-chip ${sortOrder === "newest" ? "active" : ""}`}
-                    onClick={() => setSortOrder("newest")}
-                  >
-                    Terbaru (Auto Sort)
-                  </button>
-                  <button
-                    type="button"
                     className={`sort-chip ${sortOrder === "oldest" ? "active" : ""}`}
                     onClick={() => setSortOrder("oldest")}
                   >
-                    Terlama
+                    Kronologis (Awal - Akhir)
+                  </button>
+                  <button
+                    type="button"
+                    className={`sort-chip ${sortOrder === "newest" ? "active" : ""}`}
+                    onClick={() => setSortOrder("newest")}
+                  >
+                    Terbaru di Atas
                   </button>
                   <button
                     type="button"
@@ -1290,17 +1290,17 @@ export default function App() {
                   <span className="sort-title">Urutkan:</span>
                   <button
                     type="button"
-                    className={`sort-chip ${sortOrder === "newest" ? "active" : ""}`}
-                    onClick={() => setSortOrder("newest")}
-                  >
-                    Terbaru (Auto Sort)
-                  </button>
-                  <button
-                    type="button"
                     className={`sort-chip ${sortOrder === "oldest" ? "active" : ""}`}
                     onClick={() => setSortOrder("oldest")}
                   >
-                    Terlama
+                    Kronologis (Awal - Akhir)
+                  </button>
+                  <button
+                    type="button"
+                    className={`sort-chip ${sortOrder === "newest" ? "active" : ""}`}
+                    onClick={() => setSortOrder("newest")}
+                  >
+                    Terbaru di Atas
                   </button>
                   <button
                     type="button"

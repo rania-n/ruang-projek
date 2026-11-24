@@ -17,6 +17,8 @@ dist-ssr/
 .idea/
 .vscode/*
 !.vscode/extensions.json
+.~lock.*
+~$*
 
 # Log files
 *.log

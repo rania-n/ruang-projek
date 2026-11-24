@@ -330,6 +330,13 @@ export default function App() {
   const [selected, setSelected] = useState<Subject | null>(null);
   const [guide, setGuide] = useState(false);
   const [dark, setDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
+  const [showShortcut, setShowShortcut] = useState(() => {
+    try {
+      return localStorage.getItem("rp_shortcut_closed") !== "true";
+    } catch {
+      return true;
+    }
+  });
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -469,6 +476,58 @@ export default function App() {
       </header>
 
       <main id="mapel">
+        {showShortcut && (
+          <div className="shortcut-banner">
+            <div className="shortcut-content">
+              <span className="shortcut-badge">
+                <Icon name="spark" size={14} />
+                Pintasan
+              </span>
+              <span className="shortcut-text">
+                Akses cepat ke folder Google Drive utama atau buka panduan berkas.
+              </span>
+            </div>
+            <div className="shortcut-actions">
+              {MAIN_DRIVE_URL && (
+                <a
+                  href={MAIN_DRIVE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="shortcut-btn"
+                  title="Buka Google Drive Utama"
+                >
+                  <Icon name="folder" size={15} />
+                  <span>Drive Utama</span>
+                  <Icon name="external" size={13} />
+                </a>
+              )}
+              <button
+                type="button"
+                className="shortcut-btn secondary"
+                onClick={() => setGuide(true)}
+                title="Buka Panduan Projek"
+              >
+                <Icon name="help" size={15} />
+                <span>Panduan</span>
+              </button>
+              <button
+                type="button"
+                className="shortcut-close-btn"
+                onClick={() => {
+                  setShowShortcut(false);
+                  try {
+                    localStorage.setItem("rp_shortcut_closed", "true");
+                  } catch {}
+                }}
+                aria-label="Tutup pintasan"
+                title="Tutup pintasan"
+              >
+                <Icon name="close" size={16} />
+              </button>
+            </div>
+          </div>
+        )}
+
         <div className="top-section">
           <div className="section-title-wrap">
             <h1>

@@ -1040,6 +1040,364 @@ footer a:hover {
   margin: 16px 0 20px;
 }
 
+/* ==========================================================================
+   PPKN Interactive Documentation Manager
+   ========================================================================== */
+.detail-dialog.ppkn-dialog-wide {
+  width: min(840px, calc(100vw - 28px));
+  max-height: calc(100dvh - 28px);
+}
+
+.card-top-badges {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ppkn-interactive-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--purple);
+  background: var(--purple-soft);
+  border: 1px solid var(--purple);
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ppkn-interactive-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px var(--shadow);
+}
+
+.ppkn-modal-view {
+  display: flex;
+  flex-direction: column;
+}
+
+.ppkn-modal-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.ppkn-modal-header .dialog-icon {
+  margin-bottom: 0;
+}
+
+.ppkn-action-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+
+.ppkn-drive-btn {
+  background: var(--hover);
+  color: var(--purple);
+  border-color: var(--line);
+}
+
+.ppkn-drive-btn:hover {
+  background: var(--purple-soft);
+  border-color: var(--purple);
+}
+
+.ppkn-add-form {
+  background: var(--hover);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  animation: card-in 0.2s ease-out;
+}
+
+.ppkn-add-form h4 {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ppkn-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.ppkn-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.ppkn-form-field span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ppkn-form-field input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13.5px;
+}
+
+.ppkn-form-field input:focus {
+  outline: 2px solid var(--purple);
+  border-color: var(--purple);
+}
+
+.ppkn-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ppkn-save-btn {
+  padding: 8px 18px;
+  font-size: 13.5px;
+}
+
+.ppkn-sort-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.sort-chips-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sort-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sort-chip {
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--hover);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sort-chip:hover {
+  color: var(--text);
+  border-color: var(--muted);
+}
+
+.sort-chip.active {
+  background: var(--purple-soft);
+  color: var(--purple);
+  border-color: var(--purple);
+  font-weight: 700;
+}
+
+.doc-count {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.ppkn-docs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: clamp(260px, 45vh, 420px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.ppkn-doc-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  transition:
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
+}
+
+.ppkn-doc-row:hover {
+  border-color: var(--purple);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.doc-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  width: 22px;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.doc-main-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.doc-header-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.doc-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.doc-files-list {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.doc-file-badge {
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--muted);
+  background: var(--hover);
+  padding: 2px 7px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+}
+
+.doc-notes-text {
+  font-size: 12.5px;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.doc-date-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.doc-date-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.doc-date-text {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.doc-date-input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--hover);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-date-input:focus {
+  outline: 2px solid var(--purple);
+  border-color: var(--purple);
+  background: var(--surface);
+}
+
+.doc-delete-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.doc-delete-btn:hover {
+  background: var(--notice);
+  color: #e04f5f;
+}
+
+.ppkn-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.ppkn-modal-footer small {
+  color: var(--muted);
+  font-size: 12.5px;
+  flex: 1;
+}
+
+@media (max-width: 680px) {
+  .ppkn-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .ppkn-doc-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .doc-date-col {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
 .requirement {
   display: flex;
   align-items: center;

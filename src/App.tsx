@@ -18,7 +18,9 @@ type IconName =
   | "external"
   | "moon"
   | "sun"
-  | "grid";
+  | "grid"
+  | "calendar"
+  | "plus";
 
 function Icon({ name, size = 24 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, React.ReactNode> = {
@@ -87,6 +89,13 @@ function Icon({ name, size = 24 }: { name: IconName; size?: number }) {
         <rect x="14" y="14" width="7" height="7" rx="2" />
       </>
     ),
+    calendar: (
+      <>
+        <rect x="3" y="4" width="18" height="18" rx="2" />
+        <path d="M16 2v4M8 2v4M3 10h18" />
+      </>
+    ),
+    plus: <path d="M12 5v14m-7-7h14" />,
   };
   return (
     <svg
@@ -229,10 +238,98 @@ export const DRIVE_LINKS: Record<string, string> = {
   kk: "https://drive.google.com/drive/folders/1KPWv3G-zjHsWPRUW6i0aK57kCJUr36ih?usp=sharing",
   jawa: "https://drive.google.com/drive/folders/1N9Q-Q7yPEVJXgTgAEZMPnD8jQzfFCkaB?usp=sharing",
   agama: "https://drive.google.com/drive/folders/1VdJPjc1ed2zC1o23TLzaO0zE6RrsaGeB?usp=sharing",
-  pancasila: "https://drive.google.com/drive/folders/1851O86rCkLfBHrT26ClJ1k3PDcurIDsB?usp=sharing",
+  pancasila: "https://drive.google.com/drive/folders/1j8NZ_pXE72BoIM8n93irHZuppYJoRaQS",
   pilihan: "https://drive.google.com/drive/folders/1OlR7-cf0HmZolrhOcjsihUSNqHgYVNbX?usp=sharing",
   sejarah: "https://drive.google.com/drive/folders/19Qaqzo5i7dGmhgg7hkfDbY4qEiv16lGL?usp=sharing",
 };
+
+export type PpknDocItem = {
+  id: string;
+  name: string;
+  date: string;
+  files: string[];
+  notes?: string;
+};
+
+export const DEFAULT_PPKN_DOCS: PpknDocItem[] = [
+  {
+    id: "proposal",
+    name: "Pengajuan Proposal",
+    date: "2026-10-10",
+    files: ["pengajuan proposal.jpg"],
+    notes: "Pengajuan proposal awal projek UMKM",
+  },
+  {
+    id: "16-okt",
+    name: "16 Oktober",
+    date: "2026-10-16",
+    files: ["16 okt.jpg"],
+    notes: "Pertemuan koordinasi tim dan pembagian tugas",
+  },
+  {
+    id: "ruang-temu",
+    name: "Ruang Temu (Tema)",
+    date: "2026-10-20",
+    files: ["ruang temu.jpg", "ruang temu.HEIC", "tema.jpg"],
+    notes: "Observasi & dokumentasi Ruang Temu",
+  },
+  {
+    id: "aji-bram",
+    name: "Aji Bram",
+    date: "2026-10-24",
+    files: ["aji bram.jpg", "aji bram.PNG", "aji bram.HEIC"],
+    notes: "Kunjungan & dokumentasi produk UMKM Aji Bram",
+  },
+  {
+    id: "aksata",
+    name: "Aksata",
+    date: "2026-10-28",
+    files: ["aksata.jpg", "aksata.HEIC"],
+    notes: "Dokumentasi stan dan produk Aksata",
+  },
+  {
+    id: "manna",
+    name: "Manna",
+    date: "2026-11-02",
+    files: ["manna.jpg", "manna.HEIC"],
+    notes: "Dokumentasi kemitraan UMKM Manna",
+  },
+  {
+    id: "nonik",
+    name: "Nonik",
+    date: "2026-11-06",
+    files: ["nonik.jpg", "nonik.HEIC"],
+    notes: "Dokumentasi kemasan & produk Nonik",
+  },
+  {
+    id: "eastville",
+    name: "Eastville",
+    date: "2026-11-10",
+    files: ["eastville.HEIC"],
+    notes: "Survei & observasi lokasi Eastville",
+  },
+  {
+    id: "dmr",
+    name: "DMR",
+    date: "2026-11-13",
+    files: ["dmr.HEIC"],
+    notes: "Dokumentasi kegiatan di DMR",
+  },
+  {
+    id: "bonbin",
+    name: "Bonbin",
+    date: "2026-11-16",
+    files: ["bonbin.HEIC"],
+    notes: "Dokumentasi kegiatan tim Bonbin",
+  },
+  {
+    id: "photobooth",
+    name: "Photobooth",
+    date: "2026-11-19",
+    files: ["fotobooth.HEIC", "photobooth 2.jpg"],
+    notes: "Dokumentasi stan foto hasil karya tim",
+  },
+];
 
 const subjects: Subject[] = [
   {
@@ -329,13 +426,97 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Subject | null>(null);
   const [guide, setGuide] = useState(false);
+  const [ppknModal, setPpknModal] = useState(false);
   const [dark, setDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
   const [showLauncher, setShowLauncher] = useState(true);
+
+  // State Manajemen Dokumentasi PPKN (Auto-sorting & Input Baru)
+  const [ppknDocs, setPpknDocs] = useState<PpknDocItem[]>(() => {
+    try {
+      const saved = localStorage.getItem("rp_ppkn_docs");
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return DEFAULT_PPKN_DOCS;
+  });
+  const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "name">("newest");
+  const [copiedNotification, setCopiedNotification] = useState(false);
+
+  // Form state input dokumentasi baru
+  const [newName, setNewName] = useState("");
+  const [newDate, setNewDate] = useState(() => new Date().toISOString().split("T")[0]);
+  const [newNotes, setNewNotes] = useState("");
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("rp_ppkn_docs", JSON.stringify(ppknDocs));
+    } catch {}
+  }, [ppknDocs]);
+
+  const handleUpdateDate = (id: string, date: string) => {
+    setPpknDocs((prev) => prev.map((item) => (item.id === id ? { ...item, date } : item)));
+  };
+
+  const handleAddDoc = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newName.trim()) return;
+    const newItem: PpknDocItem = {
+      id: Date.now().toString(),
+      name: newName.trim(),
+      date: newDate,
+      files: ["Dokumentasi baru"],
+      notes: newNotes.trim() || undefined,
+    };
+    setPpknDocs((prev) => [newItem, ...prev]);
+    setNewName("");
+    setNewNotes("");
+    setShowAddForm(false);
+  };
+
+  const handleDeleteDoc = (id: string) => {
+    setPpknDocs((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const handleResetDocs = () => {
+    if (window.confirm("Kembalikan daftar dokumentasi ke data awal?")) {
+      setPpknDocs(DEFAULT_PPKN_DOCS);
+    }
+  };
+
+  const sortedPpknDocs = [...ppknDocs].sort((a, b) => {
+    if (sortOrder === "newest") {
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return b.date.localeCompare(a.date);
+    }
+    if (sortOrder === "oldest") {
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date.localeCompare(b.date);
+    }
+    return a.name.localeCompare(b.name);
+  });
+
+  const handleCopyTable = () => {
+    const text = sortedPpknDocs
+      .map(
+        (d, idx) =>
+          `${idx + 1}. [${d.date || "Belum ada tanggal"}] ${d.name} (${d.files.join(", ")}) ${d.notes ? "- " + d.notes : ""}`,
+      )
+      .join("\n");
+    navigator.clipboard?.writeText(
+      `JURNAL DOKUMENTASI PPKN - PROJEK KELOMPOK\nFolder Drive: ${DRIVE_LINKS.pancasila}\n\n` +
+        text,
+    );
+    setCopiedNotification(true);
+    setTimeout(() => setCopiedNotification(false), 2500);
+  };
+
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
 
-  const isModalActive = Boolean(selected || guide);
+  const isModalActive = Boolean(selected || guide || ppknModal);
 
   useEffect(() => {
     try {
@@ -383,6 +564,7 @@ export default function App() {
   const closeDialog = () => {
     setSelected(null);
     setGuide(false);
+    setPpknModal(false);
   };
 
   const goHome = () => {
@@ -466,6 +648,14 @@ export default function App() {
                     <Icon name="external" size={14} />
                   </a>
                 ) : null}
+                <button
+                  className="nav-button nav-ppkn-btn"
+                  onClick={() => setPpknModal(true)}
+                  title="Kelola Dokumentasi & Tanggal PPKN"
+                >
+                  <Icon name="calendar" size={18} />
+                  <span className="nav-label">Dokumentasi PPKN</span>
+                </button>
                 <button
                   className="nav-button"
                   onClick={() => setGuide(true)}
@@ -580,6 +770,14 @@ export default function App() {
                   <Icon name="grid" size={19} />
                   <span className="nav-label">Akses Cepat</span>
                 </button>
+                <button
+                  className="nav-button nav-ppkn-btn"
+                  onClick={() => setPpknModal(true)}
+                  title="Kelola Dokumentasi & Tanggal PPKN"
+                >
+                  <Icon name="calendar" size={19} />
+                  <span className="nav-label">Dokumentasi PPKN</span>
+                </button>
                 <button className="nav-button" onClick={() => setGuide(true)} title="Bantuan">
                   <Icon name="help" size={20} />
                   <span className="nav-label">Bantuan</span>
@@ -661,7 +859,22 @@ export default function App() {
                       <span className="subject-icon">
                         <Icon name={subject.icon} size={25} />
                       </span>
-                      <span className="file-badge">{subject.files.length} berkas</span>
+                      <div className="card-top-badges">
+                        {subject.id === "pancasila" && (
+                          <span
+                            className="ppkn-interactive-pill"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setPpknModal(true);
+                            }}
+                            title="Klik untuk melihat dan mengatur tanggal dokumentasi"
+                          >
+                            <Icon name="calendar" size={13} />
+                            <span>Atur Tanggal ({ppknDocs.length})</span>
+                          </span>
+                        )}
+                        <span className="file-badge">{subject.files.length} berkas</span>
+                      </div>
                     </div>
 
                     <div className="card-copy">
@@ -712,7 +925,7 @@ export default function App() {
 
       <dialog
         ref={dialogRef}
-        className="detail-dialog"
+        className={`detail-dialog ${ppknModal ? "ppkn-dialog-wide" : ""}`}
         aria-labelledby="dialog-title"
         onCancel={closeDialog}
         onClick={(e) => {
@@ -758,6 +971,199 @@ export default function App() {
                 Mengerti <Icon name="arrow" size={20} />
               </button>
             </>
+          ) : ppknModal ? (
+            <div className="ppkn-modal-view">
+              <button className="dialog-close icon-button" aria-label="Tutup" onClick={closeDialog}>
+                <Icon name="close" />
+              </button>
+
+              <div className="ppkn-modal-header">
+                <span className="dialog-icon rose">
+                  <Icon name="shield" size={30} />
+                </span>
+                <div>
+                  <h2 id="dialog-title">Dokumentasi PPKN</h2>
+                  <p className="dialog-subtitle">
+                    Daftar foto & kegiatan dikelompokkan per nama berkas. Ubah tanggal untuk
+                    auto-sorting.
+                  </p>
+                </div>
+              </div>
+
+              {/* Action bar */}
+              <div className="ppkn-action-bar">
+                <a
+                  href={DRIVE_LINKS.pancasila}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="shortcut-btn ppkn-drive-btn"
+                  title="Buka Folder Dokumentasi di Google Drive"
+                >
+                  <Icon name="folder" size={16} />
+                  <span>Buka Drive Dokumentasi</span>
+                  <Icon name="external" size={13} />
+                </a>
+
+                <button
+                  type="button"
+                  className="shortcut-btn"
+                  onClick={() => setShowAddForm(!showAddForm)}
+                >
+                  <Icon name="plus" size={14} />
+                  <span>{showAddForm ? "Tutup Form" : "+ Input Baru"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="shortcut-btn secondary"
+                  onClick={handleCopyTable}
+                  title="Salin daftar tabel untuk laporan Word"
+                >
+                  <span>{copiedNotification ? "✓ Tersalin!" : "Salin Tabel Laporan"}</span>
+                </button>
+
+                <button
+                  type="button"
+                  className="shortcut-btn secondary"
+                  onClick={handleResetDocs}
+                  title="Reset ke data awal"
+                >
+                  <span>Reset Data</span>
+                </button>
+              </div>
+
+              {/* Form Input Baru */}
+              {showAddForm && (
+                <form className="ppkn-add-form" onSubmit={handleAddDoc}>
+                  <h4>+ Input Dokumentasi Baru</h4>
+                  <div className="ppkn-form-grid">
+                    <label className="ppkn-form-field">
+                      <span>Nama Kegiatan / Lokasi</span>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Contoh: Kunjungan UMKM Aksata..."
+                        value={newName}
+                        onChange={(e) => setNewName(e.target.value)}
+                      />
+                    </label>
+                    <label className="ppkn-form-field">
+                      <span>Tanggal Pelaksanaan</span>
+                      <input
+                        type="date"
+                        required
+                        value={newDate}
+                        onChange={(e) => setNewDate(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <label className="ppkn-form-field">
+                    <span>Catatan / Keterangan</span>
+                    <input
+                      type="text"
+                      placeholder="Keterangan singkat kegiatan..."
+                      value={newNotes}
+                      onChange={(e) => setNewNotes(e.target.value)}
+                    />
+                  </label>
+                  <div className="ppkn-form-actions">
+                    <button type="submit" className="primary-button ppkn-save-btn">
+                      Simpan & Urutkan
+                    </button>
+                    <button
+                      type="button"
+                      className="nav-button"
+                      onClick={() => setShowAddForm(false)}
+                    >
+                      Batal
+                    </button>
+                  </div>
+                </form>
+              )}
+
+              {/* Sorting Bar */}
+              <div className="ppkn-sort-bar">
+                <div className="sort-chips-group">
+                  <span className="sort-title">Urutkan:</span>
+                  <button
+                    type="button"
+                    className={`sort-chip ${sortOrder === "newest" ? "active" : ""}`}
+                    onClick={() => setSortOrder("newest")}
+                  >
+                    Terbaru (Auto Sort)
+                  </button>
+                  <button
+                    type="button"
+                    className={`sort-chip ${sortOrder === "oldest" ? "active" : ""}`}
+                    onClick={() => setSortOrder("oldest")}
+                  >
+                    Terlama
+                  </button>
+                  <button
+                    type="button"
+                    className={`sort-chip ${sortOrder === "name" ? "active" : ""}`}
+                    onClick={() => setSortOrder("name")}
+                  >
+                    Nama (A-Z)
+                  </button>
+                </div>
+                <span className="doc-count">{sortedPpknDocs.length} kegiatan</span>
+              </div>
+
+              {/* Dokumentasi List */}
+              <div className="ppkn-docs-list">
+                {sortedPpknDocs.map((doc, idx) => (
+                  <div key={doc.id} className="ppkn-doc-row">
+                    <div className="doc-num">{idx + 1}</div>
+                    <div className="doc-main-col">
+                      <div className="doc-header-line">
+                        <strong className="doc-name">{doc.name}</strong>
+                        <div className="doc-files-list">
+                          {doc.files.map((file) => (
+                            <span key={file} className="doc-file-badge">
+                              {file}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                      {doc.notes && <p className="doc-notes-text">{doc.notes}</p>}
+                    </div>
+
+                    <div className="doc-date-col">
+                      <label className="doc-date-input-wrap">
+                        <span className="doc-date-text">Tanggal:</span>
+                        <input
+                          type="date"
+                          className="doc-date-input"
+                          value={doc.date}
+                          onChange={(e) => handleUpdateDate(doc.id, e.target.value)}
+                          title="Ubah tanggal untuk mengurutkan otomatis"
+                        />
+                      </label>
+                      <button
+                        type="button"
+                        className="doc-delete-btn"
+                        onClick={() => handleDeleteDoc(doc.id)}
+                        title="Hapus baris ini"
+                        aria-label={`Hapus ${doc.name}`}
+                      >
+                        <Icon name="close" size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ppkn-modal-footer">
+                <small>
+                  Perubahan tanggal langsung mengurutkan baris secara otomatis dan tersimpan di
+                  browser Anda.
+                </small>
+                <button type="button" className="primary-button" onClick={closeDialog}>
+                  Selesai <Icon name="arrow" size={18} />
+                </button>
+              </div>
+            </div>
           ) : (
             <>
               <span className="dialog-icon lilac">

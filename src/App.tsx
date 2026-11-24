@@ -437,9 +437,9 @@ export default function App() {
           </a>
 
           <nav aria-label="Menu utama">
-            <button className="nav-button nav-mapel" onClick={goHome} title="Mata Pelajaran">
-              <Icon name="grid" size={19} />
-              <span className="nav-label">Mapel</span>
+            <button className="nav-button" onClick={() => setGuide(true)} title="Bantuan">
+              <Icon name="help" size={20} />
+              <span className="nav-label">Bantuan</span>
             </button>
             {MAIN_DRIVE_URL ? (
               <a
@@ -447,17 +447,13 @@ export default function App() {
                 href={MAIN_DRIVE_URL}
                 target="_blank"
                 rel="noreferrer"
-                title="Buka semua berkas di Google Drive timdev3k"
+                title="Buka semua berkas di Google Drive"
               >
                 <Icon name="folder" size={19} />
                 <span className="nav-label">Google Drive</span>
                 <Icon name="external" size={15} />
               </a>
             ) : null}
-            <button className="nav-button" onClick={() => setGuide(true)} title="Bantuan">
-              <Icon name="help" size={20} />
-              <span className="nav-label">Bantuan</span>
-            </button>
             <button
               className="nav-button theme-button"
               onClick={() => setDark(!dark)}
@@ -633,9 +629,6 @@ export default function App() {
                   Drive.
                 </li>
               </ol>
-              <p className="guide-note">
-                Akun Google Drive resmi projek: <strong>timdev3k@gmail.com</strong>
-              </p>
               <button className="primary-button dialog-action" onClick={closeDialog}>
                 Mengerti <Icon name="arrow" size={20} />
               </button>

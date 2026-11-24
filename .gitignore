@@ -5,7 +5,9 @@ node_modules/
 dist/
 dist-ssr/
 
-# Environment and local files
+# Archive files
+*.zip
+*.tar.gz
 *.local
 .env
 .env.*

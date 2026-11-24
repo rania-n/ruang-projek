@@ -224,14 +224,14 @@ export const MAIN_DRIVE_URL =
 
 // 2. Tautan Folder Google Drive per Mata Pelajaran dari akun timdev3k@gmail.com
 export const DRIVE_LINKS: Record<string, string> = {
-  indonesia: "", // contoh: "https://drive.google.com/drive/folders/..."
-  kik: "",
-  kk: "",
-  jawa: "",
-  agama: "",
-  pancasila: "",
-  pilihan: "",
-  sejarah: "",
+  indonesia: "https://drive.google.com/drive/folders/11MSjDebREUzyVNVT3VGJqG30cQFbPeoI?usp=sharing",
+  kik: "https://drive.google.com/drive/folders/1JwG_puHjpxyBGaExziJC8Z6cIAjbXt3P?usp=sharing",
+  kk: "https://drive.google.com/drive/folders/1KPWv3G-zjHsWPRUW6i0aK57kCJUr36ih?usp=sharing",
+  jawa: "https://drive.google.com/drive/folders/1N9Q-Q7yPEVJXgTgAEZMPnD8jQzfFCkaB?usp=sharing",
+  agama: "https://drive.google.com/drive/folders/1VdJPjc1ed2zC1o23TLzaO0zE6RrsaGeB?usp=sharing",
+  pancasila: "https://drive.google.com/drive/folders/1851O86rCkLfBHrT26ClJ1k3PDcurIDsB?usp=sharing",
+  pilihan: "https://drive.google.com/drive/folders/1OlR7-cf0HmZolrhOcjsihUSNqHgYVNbX?usp=sharing",
+  sejarah: "https://drive.google.com/drive/folders/19Qaqzo5i7dGmhgg7hkfDbY4qEiv16lGL?usp=sharing",
 };
 
 const subjects: Subject[] = [

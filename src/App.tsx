@@ -520,21 +520,15 @@ export default function App() {
                   type="button"
                   className={`launcher-card ${subject.color}`}
                   onClick={() => handleCardClick(subject)}
-                  style={{ animationDelay: `${idx * 30}ms` }}
+                  style={{ animationDelay: `${idx * 25}ms` }}
                   title={`Buka Google Drive ${subject.name}`}
                 >
                   <div className="launcher-card-icon">
                     <Icon name={subject.icon} size={26} />
                   </div>
-                  <div className="launcher-card-text">
-                    <h3>{subject.name}</h3>
-                    <p>{subject.description}</p>
-                  </div>
-                  <div className="launcher-card-action">
-                    <span className="action-tag">Buka Drive</span>
-                    <span className="action-arrow">
-                      <Icon name="external" size={14} />
-                    </span>
+                  <span className="launcher-card-name">{subject.name}</span>
+                  <div className="launcher-card-arrow" aria-hidden="true">
+                    <Icon name="external" size={16} />
                   </div>
                 </button>
               ))}

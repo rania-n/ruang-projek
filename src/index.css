@@ -487,9 +487,9 @@ main {
 .launcher-card-icon {
   display: grid;
   place-items: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
   background: var(--soft);
   color: var(--accent);
   flex-shrink: 0;
@@ -500,47 +500,33 @@ main {
   transform: scale(1.08);
 }
 
-.launcher-card-text {
+.launcher-card-name {
   flex: 1;
   min-width: 0;
-}
-
-.launcher-card-text h3 {
   font-family: "Manrope", sans-serif;
   font-size: 16px;
   font-weight: 700;
   color: var(--text);
-  margin: 0 0 4px;
-  line-height: 1.25;
-}
-
-.launcher-card-text p {
-  font-size: 12.5px;
-  color: var(--muted);
-  margin: 0;
   line-height: 1.35;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: normal;
 }
 
-.launcher-card-action {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  padding: 6px 10px;
+.launcher-card-arrow {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
   border-radius: 8px;
   background: var(--hover);
   color: var(--accent);
-  font-size: 12px;
-  font-weight: 600;
+  flex-shrink: 0;
   transition: all 0.15s ease;
 }
 
-.launcher-card:hover .launcher-card-action {
+.launcher-card:hover .launcher-card-arrow {
   background: var(--soft);
-  transform: translateX(2px);
+  transform: translate(2px, -2px);
 }
 
 .launcher-footer {
@@ -588,15 +574,16 @@ main {
   .launcher-close-btn {
     padding: 6px 10px;
   }
-  .launcher-card-action .action-tag {
-    display: none;
+  .launcher-card {
+    padding: 14px 16px;
+    gap: 12px;
   }
-  .launcher-card-action {
-    padding: 6px;
-    border-radius: 6px;
+  .launcher-card-icon {
+    width: 42px;
+    height: 42px;
   }
-  .launcher-card-text p {
-    white-space: normal;
+  .launcher-card-name {
+    font-size: 15px;
   }
 }
 

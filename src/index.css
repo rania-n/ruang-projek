@@ -455,17 +455,6 @@ main {
   color: var(--purple);
 }
 
-.subject-counter {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--muted);
-  background: var(--hover);
-  border: 1px solid var(--line);
-  padding: 3px 10px;
-  border-radius: 999px;
-  white-space: nowrap;
-}
-
 /* Search Box: Stretch fleksibel */
 .search-box {
   display: flex;

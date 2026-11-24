@@ -330,13 +330,7 @@ export default function App() {
   const [selected, setSelected] = useState<Subject | null>(null);
   const [guide, setGuide] = useState(false);
   const [dark, setDark] = useState(() => window.matchMedia("(prefers-color-scheme: dark)").matches);
-  const [showShortcut, setShowShortcut] = useState(() => {
-    try {
-      return localStorage.getItem("rp_shortcut_closed") !== "true";
-    } catch {
-      return true;
-    }
-  });
+  const [showShortcut, setShowShortcut] = useState(true);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const triggerRef = useRef<HTMLElement | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
@@ -344,6 +338,9 @@ export default function App() {
   const isModalActive = Boolean(selected || guide);
 
   useEffect(() => {
+    try {
+      localStorage.removeItem("rp_shortcut_closed");
+    } catch {}
     const timer = setTimeout(() => setLoading(false), 900);
     return () => clearTimeout(timer);
   }, []);
@@ -513,12 +510,7 @@ export default function App() {
               <button
                 type="button"
                 className="shortcut-close-btn"
-                onClick={() => {
-                  setShowShortcut(false);
-                  try {
-                    localStorage.setItem("rp_shortcut_closed", "true");
-                  } catch {}
-                }}
+                onClick={() => setShowShortcut(false)}
                 aria-label="Tutup pintasan"
                 title="Tutup pintasan"
               >
@@ -533,7 +525,6 @@ export default function App() {
             <h1>
               Mata Pelajaran<span>.</span>
             </h1>
-            <span className="subject-counter">8 mapel siap akses</span>
           </div>
 
           <label className="search-box">
